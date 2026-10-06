@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f9d6b">
+  <title>Cartharsis</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand"><span class="dot"></span> Cartharsis</div>
+      <div class="saved-wrap">
+        <div class="saved-label">Total you didn't spend</div>
+        <div class="saved-amt" id="savedAmt">₹0</div>
+        <div class="saved-sub"><b id="resistCount">0</b> cravings resisted · <b id="streakCount">0</b>-day streak</div>
+      </div>
+    </header>
+
+    <main>
+      <!-- SHOP -->
+      <section class="screen active" id="shop">
+        <div class="mode-toggle">
+          <button data-mode="quick" class="active"><b>⚡ Quick</b><span>10 min · daily needs</span></button>
+          <button data-mode="store"><b>📦 Store</b><span>Big stuff · deals</span></button>
+        </div>
+
+        <!-- QUICK view -->
+        <div id="quickView">
+          <div class="quick-banner"><span class="bolt">⚡</span><div><b>Delivery in 10 minutes</b></div><span>Groceries &amp; daily</span></div>
+          <div class="cat-chips" id="catChips"></div>
+          <div class="quick-grid" id="quickGrid"><div class="loading">Loading fresh stock…</div></div>
+        </div>
+
+        <!-- STORE view -->
+        <div id="storeView" hidden>
+          <div class="store-search"><input id="storeSearch" type="text" placeholder="Search anything — live Amazon" aria-label="Search"><button id="storeSearchBtn" class="ss-btn" aria-label="Search">🔍</button></div>
+
+          <div class="trend-head">🔥 Trending now
+            <span class="live-chip"><span class="live-dot"></span><span id="liveLabel">Live</span> · <span id="updatedAgo">just now</span></span>
+          </div>
+          <div class="trend-row" id="trendingRow"><div class="loading">Loading trending…</div></div>
+
+          <div class="cat-chips" id="storeChips"></div>
+          <div class="store-grid" id="storeGrid"><div class="loading">Loading deals…</div></div>
+
+          <div class="craving-card" style="margin-top:18px">
+            <h3>🔥 Can't find it? Add your own craving</h3>
+            <p>Paste the thing you're itching to buy. Add it, checkout, feel the rush — spend nothing.</p>
+            <div class="field-row">
+              <input id="cName" class="f" type="text" placeholder="e.g. Nike Air Force 1" aria-label="Product name">
+              <input id="cPrice" class="f price-field" type="number" inputmode="numeric" placeholder="₹ price" aria-label="Price">
+            </div>
+            <button class="btn add-craving-btn" id="addCraving">Add my craving to cart</button>
+          </div>
+        </div>
+
+        <div class="demo-flag">🧪 <b>Prototype:</b> real product images via a free product API. Delivery playback is sped up for testing, but the message timestamps show the real 10-min (Quick) / multi-day (Store) schedule.</div>
+      </section>
+
+      <!-- CART -->
+      <section class="screen" id="cart">
+        <h2 class="sec-title">Your cart</h2>
+        <div id="cartList"></div>
+        <div id="cartFooter" hidden>
+          <div class="dw" id="deliveryWindow" hidden>
+            <div class="dw-title">🗓️ Schedule your dopamine <span>· Store items</span></div>
+            <div class="dw-chips" id="dwChips"></div>
+          </div>
+          <div class="cart-total"><span class="lbl">You're about to "spend"</span><span class="amt" id="cartTotal">₹0</span></div>
+          <button class="btn accent block" id="checkoutBtn">Fake checkout 🎉</button>
+          <p class="checkout-note">No card. No charge. You keep <b id="cartKeep">₹0</b>.</p>
+        </div>
+      </section>
+
+      <!-- ORDERS -->
+      <section class="screen" id="orders">
+        <h2 class="sec-title">On the way 🚚</h2>
+        <p class="sec-sub">Track your (imaginary) deliveries. This is the rush.</p>
+        <div id="ordersList"></div>
+      </section>
+
+      <!-- YOU -->
+      <section class="screen" id="you">
+        <h2 class="sec-title">Your wins</h2>
+        <div class="stat-grid">
+          <div class="stat"><div class="num green" id="statSaved">₹0</div><div class="cap">Money kept in your pocket</div></div>
+          <div class="stat"><div class="num coral" id="statResist">0</div><div class="cap">Impulses beaten</div></div>
+          <div class="stat"><div class="num" id="statItems">0</div><div class="cap">Items "bought"</div></div>
+          <div class="stat"><div class="num" id="statStreak">0</div><div class="cap">Day streak</div></div>
+        </div>
+        <div id="mindfulCard"></div>
+        <div class="speed-card">
+          <div class="speed-head">🕐 Delivery speed</div>
+          <div class="speed-opts" id="speedOpts"></div>
+        </div>
+        <button class="btn accent block" id="shareBtn" style="margin-bottom:20px">📤 Share my savings</button>
+        <h2 class="sec-title">Badges</h2>
+        <div class="badges" id="badges"></div>
+        <button class="reset" id="resetBtn">Reset my data</button>
+      </section>
+    </main>
+
+    <nav class="nav">
+      <button data-tab="shop" class="active"><span class="ni">🛍️</span>Shop</button>
+      <button data-tab="cart"><span class="ni">🛒</span>Cart<span class="cart-count" id="navCount" hidden>0</span></button>
+      <button data-tab="orders"><span class="ni">📦</span>Orders</button>
+      <button data-tab="you"><span class="ni">🏆</span>You</button>
+    </nav>
+  </div>
+
+  <div id="splash" class="splash">
+    <div class="splash-inner">
+      <div class="splash-brand"><span class="dot"></span> Cartharsis</div>
+      <div class="splash-hero">Shop the feeling.<br><b>Keep the cash.</b></div>
+      <div class="splash-sub">Cart bharo, checkout karo, wahi rush lo — bina ek rupaya kharch kiye.</div>
+      <button class="splash-btn" id="startBtn">Start →</button>
+    </div>
+    <div class="splash-foot">Fake shopping · Real dopamine · Zero spend</div>
+  </div>
+
+  <div id="pushBanner" class="push-banner" hidden></div>
+  <canvas id="confetti" hidden></canvas>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
